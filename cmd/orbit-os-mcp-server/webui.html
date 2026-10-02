@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OrbitOS — MCP Server</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #111111;
+      min-height: 100vh;
+      padding: 48px 20px;
+      line-height: 1.6;
+    }
+
+    .container { max-width: 680px; margin: 0 auto; }
+
+    header { margin-bottom: 36px; display: flex; align-items: center; gap: 18px; }
+    .logo { width: 48px; height: 48px; flex-shrink: 0; border-radius: 11px; }
+    .header-text h1 {
+      font-size: 1.55rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: #111111;
+    }
+    .pill {
+      font-size: 0.68rem;
+      font-weight: 600;
+      background: #FF7A0018;
+      color: #FF7A00;
+      border: 1px solid #FF7A0060;
+      padding: 2px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+    .header-text p { color: #666666; margin-top: 4px; font-size: 0.88rem; }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      padding: 22px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px #00000008;
+    }
+    .card-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #FF7A00;
+      margin-bottom: 13px;
+    }
+
+    /* status */
+    .status-row { display: flex; align-items: center; gap: 10px; }
+    .dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: #4caf50;
+      box-shadow: 0 0 0 3px #4caf5022;
+    }
+    .dot.checking {
+      background: #FF7A00;
+      box-shadow: 0 0 0 3px #FF7A0030;
+      animation: blink 1.1s ease-in-out infinite;
+    }
+    .dot.offline { background: #e53935; box-shadow: 0 0 0 3px #e5393520; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* url box */
+    .url-box {
+      font-family: 'SF Mono','Fira Code',Consolas,monospace;
+      font-size: 0.875rem;
+      background: #fff8f2;
+      border: 1px solid #ffd0a0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      color: #c85a00;
+      word-break: break-all;
+    }
+
+    /* code block */
+    .code-block {
+      background: #fff8f2;
+      border: 1px solid #ffd0a0;
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'SF Mono','Fira Code',Consolas,monospace;
+      font-size: 0.83rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+      tab-size: 2;
+      color: #333333;
+    }
+    .json-key { color: #c85a00; }
+    .json-str { color: #FF7A00; }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 11px;
+      padding: 8px 18px;
+      background: #FF7A00;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .12s;
+    }
+    .copy-btn:hover { background: #e06a00; }
+    .copy-btn.copied { background: #4caf50; }
+
+    .hint { color: #888888; font-size: 0.82rem; margin-top: 13px; }
+
+    code {
+      font-family: 'SF Mono','Fira Code',Consolas,monospace;
+      font-size: 0.82em;
+      background: #fff0e0;
+      color: #c85a00;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* steps */
+    .steps { list-style: none; counter-reset: s; }
+    .steps li {
+      counter-increment: s;
+      display: flex;
+      gap: 14px;
+      padding: 11px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 0.88rem;
+      color: #333333;
+    }
+    .steps li:last-child { border-bottom: none; padding-bottom: 0; }
+    .steps li::before {
+      content: counter(s);
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      background: #FF7A00;
+      border-radius: 50%;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <img src="favicon.svg" class="logo" alt="OrbitOS icon">
+    <div class="header-text">
+      <h1>Orbit OS MCP Server <span class="pill" id="version">v—</span></h1>
+      <p>Model Context Protocol server — connect AI assistants to your device</p>
+    </div>
+  </header>
+
+  <div class="card" style="border-color:#b45309">
+    <div class="card-label" style="color:#f59e0b">⚠ Development and testing tool</div>
+    <p class="hint" style="margin:0">The MCP endpoint has <strong>no authentication</strong>: anyone on this network can call every tool, including reboot, shutdown, OTA install and factory reset. Use it only on trusted networks and stop the app when you're not using it.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Status</div>
+    <div class="status-row">
+      <div class="dot checking" id="dot"></div>
+      <span id="status-text">Checking…</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">MCP Endpoint</div>
+    <div class="url-box" id="mcp-url">—</div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Cursor Configuration</div>
+    <div class="code-wrap">
+      <div class="code-block" id="config-block">Loading…</div>
+    </div>
+    <button class="copy-btn" id="copy-btn" onclick="copyConfig()">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/>
+        <path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/>
+      </svg>
+      Copy JSON
+    </button>
+    <p class="hint">
+      Paste into <code>.cursor/mcp.json</code> or Cursor → Settings → MCP.
+      You can rename <code>"orbit-os"</code> to any label you prefer.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Setup Steps</div>
+    <ol class="steps">
+      <li>Open Cursor and go to <strong>Settings → MCP</strong>, or create <code>.cursor/mcp.json</code> in your project root</li>
+      <li>Copy the JSON config above and paste it (merge with existing content if the file already exists)</li>
+      <li>Reload the MCP server list in Cursor (or restart Cursor)</li>
+      <li>The <code>orbit-os</code> server should appear as <strong>connected</strong> — you can now ask Cursor about your device</li>
+    </ol>
+  </div>
+
+</div>
+<script>
+  let configText = '';
+
+  function highlight(json) {
+    return json
+      .replace(/("(?:[^"\\]|\\.)*")(\s*:)/g, '<span class="json-key">$1</span>$2')
+      .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span class="json-str">$1</span>');
+  }
+
+  async function load() {
+    try {
+      const r = await fetch('api/info');
+      if (!r.ok) throw new Error('non-ok');
+      const data = await r.json();
+
+      document.getElementById('mcp-url').textContent = data.mcp_url;
+      if (data.version) document.getElementById('version').textContent = 'v' + data.version;
+
+      const cfg = { mcpServers: { 'orbit-os': { url: data.mcp_url } } };
+      configText = JSON.stringify(cfg, null, 2);
+      document.getElementById('config-block').innerHTML = highlight(configText);
+
+      document.getElementById('dot').className = 'dot';
+      document.getElementById('status-text').textContent = 'MCP server is running';
+    } catch (_) {
+      document.getElementById('dot').className = 'dot offline';
+      document.getElementById('status-text').textContent = 'Could not fetch server info';
+      document.getElementById('config-block').textContent = 'Unavailable';
+    }
+  }
+
+  function copyConfig() {
+    if (!configText) return;
+    navigator.clipboard.writeText(configText).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg> Copied!';
+      btn.className = 'copy-btn copied';
+      setTimeout(() => {
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg> Copy JSON';
+        btn.className = 'copy-btn';
+      }, 2000);
+    });
+  }
+
+  load();
+</script>
+</body>
+</html>

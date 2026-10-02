@@ -1,0 +1,23 @@
+{
+  "name": "MCP Server - Powering AI connections",
+  "slug": "mcp-server",
+  "version": "1.1.0",
+  "description": "MCP server for Orbit OS devices: lets AI agents control GPIO, I2C, UART, SPI, PWM, Wi-Fi, Ethernet and Bluetooth on real hardware.",
+  "entry_point": "orbit-os-mcp-server",
+  "permissions": [
+    "AppHubService/*",
+    "BluetoothService/*",
+    "EthernetService/*",
+    "GpioService/*",
+    "I2CService/*",
+    "PackageManagerService/*",
+    "PackageService/*",
+    "PowerService/*",
+    "PwmService/*",
+    "SpiService/*",
+    "SystemService/*",
+    "UartService/*",
+    "UpdateService/*",
+    "WiFiService/*"
+  ]
+}

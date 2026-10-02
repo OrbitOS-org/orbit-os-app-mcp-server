@@ -19,5 +19,6 @@
     "UartService/*",
     "UpdateService/*",
     "WiFiService/*"
-  ]
+  ],
+  "package_id": "org.orbit-os.tools.mcp_server"
 }

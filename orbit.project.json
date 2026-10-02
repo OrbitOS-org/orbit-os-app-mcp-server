@@ -1,7 +1,8 @@
 {
   "language": "go",
-  "name": "orbit-os-mcp-server",
+  "name": "orbit-os-app-mcp-server",
   "appPath": "cmd/orbit-os-mcp-server",
   "certsDir": "cmd/certs/grpc",
-  "sdkVersion": "v26.0.3"
+  "sdkVersion": "v26.0.3",
+  "sdkDevPackageNaming": false
 }

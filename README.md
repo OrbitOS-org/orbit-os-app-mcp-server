@@ -15,6 +15,12 @@ Runs on Raspberry Pi, Arduino UNO Q and other ARM64 devices with [Orbit OS](http
 > [!WARNING]
 > **Development and testing tool.** The MCP endpoint has **no authentication**: anyone on the same network can call every tool, including reboot, shutdown, OTA install and factory reset. Use it only on trusted networks and stop the app when you're not using it.
 
+## Demo
+
+[![Control Raspberry Pi with Cursor AI via MCP Server — relays & I²C sensor, no SSH, no scripts](https://img.youtube.com/vi/PaKN3fWGJWk/maxresdefault.jpg)](https://youtu.be/PaKN3fWGJWk)
+
+*Cursor controlling relays and reading an I²C sensor on a Raspberry Pi through the Orbit OS MCP Server (video recorded with an earlier version).*
+
 ## Features
 
 - **84 tools** across the device's services — see the list below

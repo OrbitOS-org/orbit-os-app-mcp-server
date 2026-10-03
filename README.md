@@ -10,8 +10,6 @@ An [MCP](https://modelcontextprotocol.io) server that runs **on the device** as 
 
 Runs on Raspberry Pi, Arduino UNO Q and other ARM64 devices with [Orbit OS](https://www.orbit-os.org/?ref=github-mcp) (free Community Edition).
 
-<a href="https://store.orbit-os.org/app/orbit-os-mcp-server?ref=github-mcp"><img src="https://www.orbit-os.org/images/badges/get-it-on-orbit-os-store@3x.png" width="200" alt="Get it on Orbit OS Store"></a>
-
 > [!WARNING]
 > **Development and testing tool.** The MCP endpoint has **no authentication**: anyone on the same network can call every tool, including reboot, shutdown, OTA install and factory reset. Use it only on trusted networks and stop the app when you're not using it.
 
@@ -53,6 +51,8 @@ Runs on Raspberry Pi, Arduino UNO Q and other ARM64 devices with [Orbit OS](http
 ## Install
 
 **From the Orbit OS Store (recommended):** install [MCP Server](https://store.orbit-os.org/app/orbit-os-mcp-server?ref=github-mcp) on your device in one click.
+
+<a href="https://store.orbit-os.org/app/orbit-os-mcp-server?ref=github-mcp"><img src="https://www.orbit-os.org/images/badges/get-it-on-orbit-os-store@3x.png" width="200" alt="Get it on Orbit OS Store"></a>
 
 **From source — recommended: [Orbit Studio](https://marketplace.visualstudio.com/items?itemName=orbit-os.orbit-studio) (VS Code):**
 

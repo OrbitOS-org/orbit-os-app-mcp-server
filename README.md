@@ -54,13 +54,17 @@ Runs on Raspberry Pi, Arduino UNO Q and other ARM64 devices with [Orbit OS](http
 
 **From the Orbit OS Store (recommended):** install [MCP Server](https://store.orbit-os.org/app/orbit-os-mcp-server?ref=github-mcp) on your device in one click.
 
-**From source:**
-```bash
-git clone https://github.com/OrbitOS-org/orbit-os-app-mcp-server
-cd orbit-os-app-mcp-server
-go build ./cmd/orbit-os-mcp-server
-```
-Package and deploy it as a signed `.orb` with [Orbit Studio](https://marketplace.visualstudio.com/items?itemName=orbit-os.orbit-studio) (VS Code).
+**From source — recommended: [Orbit Studio](https://marketplace.visualstudio.com/items?itemName=orbit-os.orbit-studio) (VS Code):**
+
+1. Clone the repository and open the folder in VS Code with the Orbit Studio extension:
+   ```bash
+   git clone https://github.com/OrbitOS-org/orbit-os-app-mcp-server
+   code orbit-os-app-mcp-server
+   ```
+2. In the Orbit sidebar, run **Add / Update SDK** and set your device's IP.
+3. Use **Run** to try it live against a device in Developer Mode, then **Build + Deploy** to install the signed `.orb`.
+
+**Without Orbit Studio:** `go build ./cmd/orbit-os-mcp-server` builds the binary with the published SDK module — use Orbit Studio to package and sign the `.orb`.
 
 ## Connect an MCP client
 
@@ -91,7 +95,7 @@ This project was created with [Orbit Studio](https://marketplace.visualstudio.co
 | `cmd/orbit-os-mcp-server/orb/icon.svg` | launcher / Store icon |
 | `orbit.project.json` | Orbit Studio project settings |
 
-- Open the folder in VS Code with Orbit Studio, **Add / Update SDK** (creates the local `orbit-os-sdk-go/` copy and `go.work`, both git-ignored), then **Run** to develop against a device in Developer Mode, or **Build + Deploy** to install the `.orb`.
+- **Recommended workflow:** open the folder in VS Code with Orbit Studio, **Add / Update SDK** (creates the local `orbit-os-sdk-go/` copy and `go.work`, both git-ignored), then **Run** to develop against a device in Developer Mode, or **Build + Deploy** to install the `.orb`.
 - Without Orbit Studio, `go build` uses the published SDK module [`github.com/OrbitOS-org/orbit-os-sdk-go/v26`](https://pkg.go.dev/github.com/OrbitOS-org/orbit-os-sdk-go/v26).
 - Development TLS certificates live in `cmd/certs/grpc/` and are never committed.
 
